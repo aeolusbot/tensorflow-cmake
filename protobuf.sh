@@ -56,7 +56,7 @@ find_protobuf () {
     QUOTE_START="\s*=\s*\\\""
     QUOTE_END="\\\"\s*,\s*"
     FOOTER="\)"
-    PROTOBUF_NAME="${NAME_START}protobuf${QUOTE_END}"
+    PROTOBUF_NAME="${NAME_START}com_google_protobuf${QUOTE_END}"
     
     
     
@@ -66,7 +66,8 @@ find_protobuf () {
 	
 	URL="s/\s*url${QUOTE_START}\(${ANY_NO_QUOTES}\)${QUOTE_END}/\1/p"
 	
-	
+  echo ${PROTOBUF_REGEX}
+  echo ${TF_DIR}
 	PROTOBUF_TEXT=$(grep -Pzo ${PROTOBUF_REGEX} ${TF_DIR}/tensorflow/workspace.bzl) || fail
 	PROTOBUF_URL=$(echo "${PROTOBUF_TEXT}" | sed -n ${URL})
 	PROTOBUF_URLS[0]=${PROTOBUF_URL}
@@ -210,7 +211,7 @@ if [ "${MODE}" == "install" ]; then
     ./configure --prefix=${INSTALL_DIR} || fail
     echo "Starting protobuf install."
     # build and install
-    make || fail
+    make -j$(nproc) || fail
     make check || fail
     make install || fail
     ldconfig || fail

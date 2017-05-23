@@ -186,7 +186,7 @@ echo
 # perform requested action
 if [ "${MODE}" == "install" ]; then
     # donwload eigen and extract to download directory
-    echo "Downlaoding Eigen to ${DOWNLOAD_DIR}"
+    echo "Downloading Eigen to ${DOWNLOAD_DIR}"
     cd ${DOWNLOAD_DIR} || fail
     rm -rf eigen-eigen-${EIGEN_ARCHIVE_HASH} || fail
     rm -f ${EIGEN_ARCHIVE_HASH}.tar.gz* || fail
@@ -207,9 +207,8 @@ if [ "${MODE}" == "install" ]; then
     # create build directory and build
     mkdir build || fail
     cd build
-    cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}\
-	  -DINCLUDE_INSTALL_DIR=${INSTALL_DIR}/include/eigen/eigen-eigen-${EIGEN_ARCHIVE_HASH} .. || fail
-    make || fail
+    cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} .. || fail
+    make -j$(nproc) || fail
     make install || fail
     echo "Installation complete"
     echo "Cleaning up..."
@@ -220,7 +219,7 @@ if [ "${MODE}" == "install" ]; then
 elif [ "${MODE}" == "generate" ]; then
     if [ "${GENERATE_MODE}" == "installed" ]; then
 	# try to locate eigen in INSTALL_DIR		
-	if [ -d "${INSTALL_DIR}/include/eigen/eigen-eigen-${EIGEN_ARCHIVE_HASH}" ]; then		
+	if [ -d "${INSTALL_DIR}/include/eigen3" ]; then		
             echo -e "${GREEN}Found Eigen in ${INSTALL_DIR}${NO_COLOR}"
 	else		
  	    echo -e "${YELLOW}Warning: Could not find Eigen in ${INSTALL_DIR}${NO_COLOR}"			
@@ -232,7 +231,7 @@ elif [ "${MODE}" == "generate" ]; then
     echo "set(Eigen_URL ${EIGEN_URL})" > ${EIGEN_OUT} || fail
     echo "set(Eigen_ARCHIVE_HASH ${EIGEN_ARCHIVE_HASH})" >> ${EIGEN_OUT} || fail
     echo "set(Eigen_HASH SHA256=${EIGEN_HASH})" >> ${EIGEN_OUT} || fail
-    echo "set(Eigen_DIR eigen-eigen-${EIGEN_ARCHIVE_HASH})" >> ${EIGEN_OUT} || fail
+    echo "set(Eigen_DIR eigen3)" >> ${EIGEN_OUT} || fail
     echo "set(Eigen_INSTALL_DIR ${INSTALL_DIR})" >> ${EIGEN_OUT} || fail
     echo "Eigen_VERSION.cmake written to ${CMAKE_DIR}"
     # perform specific operations regarding installation
