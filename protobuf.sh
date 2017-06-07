@@ -213,7 +213,9 @@ if [ "${MODE}" == "install" ]; then
     make -j$(nproc) || fail
     make check || fail
     make install || fail
-    ldconfig || fail
+    if [ `id -u` == 0 ]; then
+        ldconfig || fail
+    fi
     cd ${DOWNLOAD_DIR} || fail
     rm ${PROTOBUF_ARCHIVE} || fail
     echo "Protobuf has been installed to ${INSTALL_DIR}"
