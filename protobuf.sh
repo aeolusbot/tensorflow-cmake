@@ -2,7 +2,7 @@
 # Author: Connor Weeks
 
 SCRIPT_DIR="$(cd "$(dirname "${0}")"; pwd)"
-NUMJOBS=${NUMJOBS:-1}
+NUMJOBS=${NUMJOBS}
 RED="\033[1;31m"
 YELLOW="\033[1;33m"
 GREEN="\033[0;32m"
